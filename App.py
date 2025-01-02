@@ -1,13 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysqldb import MySQL
-
+from flask import Flask, render_template, request, redirect, url_for, flash
+password = 'ZeroAutomata03!'
 # initializations
 app = Flask(__name__)
 
 # Mysql Connection
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'ZeroAutomata03!'
+app.config['MYSQL_PASSWORD'] = password
 app.config['MYSQL_DB'] = 'computer_products'
 mysql = MySQL(app)
 
@@ -46,17 +46,17 @@ def add_product():
 
 
 @app.route('/edit/<id>', methods=['POST', 'GET'])
-def get_contact(id):
+def get_product(id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM products WHERE id_products = %s', (id))
     data = cur.fetchall()
     cur.close()
     print(data[0])
-    return render_template('edit-contact.html', contact=data[0])
+    return render_template('edit-product.html', product=data[0])
 
 
 @app.route('/update/<id>', methods=['POST'])
-def update_contact(id):
+def update_product(id):
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
@@ -80,7 +80,7 @@ def update_contact(id):
 
 
 @app.route('/delete/<string:id>', methods=['POST', 'GET'])
-def delete_contact(id):
+def delete_product(id):
     cur = mysql.connection.cursor()
     print(id)
     cur.execute('DELETE FROM products WHERE id_products = {0}'.format(id))
