@@ -5,70 +5,90 @@ from flask_mysqldb import MySQL
 app = Flask(__name__)
 
 # Mysql Connection
-app.config['MYSQL_HOST'] = 'localhost' 
+app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'flaskcrud'
+app.config['MYSQL_PASSWORD'] = 'ZeroAutomata03!'
+app.config['MYSQL_DB'] = 'computer_products'
 mysql = MySQL(app)
 
 # settings
 app.secret_key = "mysecretkey"
 
 # routes
+
+
 @app.route('/')
 def Index():
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM contacts')
+    cur.execute('SELECT * FROM products')
     data = cur.fetchall()
     cur.close()
-    return render_template('index.html', contacts = data)
+    return render_template('index.html', products=data)
 
-@app.route('/add_contact', methods=['POST'])
-def add_contact():
+
+@app.route('/add_product', methods=['POST'])
+def add_product():
     if request.method == 'POST':
-        fullname = request.form['fullname']
-        phone = request.form['phone']
-        email = request.form['email']
+        name = request.form['name']
+        description = request.form['description']
+        category = request.form['category']
+        unit_price = request.form['unit_price']
+        stock = request.form['stock']
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO contacts (fullname, phone, email) VALUES (%s,%s,%s)", (fullname, phone, email))
+        cur.execute(
+            "INSERT INTO products (name,description,category,unit_price,stock) VALUES (%s,%s,%s,%s,%s)",
+            (name, description, category, unit_price, stock)
+        )
         mysql.connection.commit()
-        flash('Contact Added successfully')
+        cur.close()
+        flash('Product Added Successfully')
         return redirect(url_for('Index'))
 
-@app.route('/edit/<id>', methods = ['POST', 'GET'])
+
+@app.route('/edit/<id>', methods=['POST', 'GET'])
 def get_contact(id):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM contacts WHERE id = %s', (id))
+    cur.execute('SELECT * FROM products WHERE id_products = %s', (id))
     data = cur.fetchall()
     cur.close()
     print(data[0])
-    return render_template('edit-contact.html', contact = data[0])
+    return render_template('edit-contact.html', contact=data[0])
+
 
 @app.route('/update/<id>', methods=['POST'])
 def update_contact(id):
     if request.method == 'POST':
-        fullname = request.form['fullname']
-        phone = request.form['phone']
-        email = request.form['email']
+        name = request.form['name']
+        description = request.form['description']
+        category = request.form['category']
+        unit_price = request.form['unit_price']
+        stock = request.form['stock']
         cur = mysql.connection.cursor()
         cur.execute("""
-            UPDATE contacts
-            SET fullname = %s,
-                email = %s,
-                phone = %s
-            WHERE id = %s
-        """, (fullname, email, phone, id))
-        flash('Contact Updated Successfully')
+            UPDATE products
+            SET name = %s,
+                description = %s,
+                category = %s,
+                unit_price = %s,
+                stock = %s
+            WHERE id_products = %s
+        """, (name, description, category, unit_price, stock, id))
+        flash('Product Updated Successfully')
         mysql.connection.commit()
+        cur.close()
         return redirect(url_for('Index'))
 
-@app.route('/delete/<string:id>', methods = ['POST','GET'])
+
+@app.route('/delete/<string:id>', methods=['POST', 'GET'])
 def delete_contact(id):
     cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM contacts WHERE id = {0}'.format(id))
+    print(id)
+    cur.execute('DELETE FROM products WHERE id_products = {0}'.format(id))
     mysql.connection.commit()
-    flash('Contact Removed Successfully')
+    cur.close()
+    flash('Product Removed Successfully')
     return redirect(url_for('Index'))
+
 
 # starting the app
 if __name__ == "__main__":
