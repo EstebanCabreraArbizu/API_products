@@ -1,7 +1,7 @@
 # Screenshot
 ![](docs/screenshot.png)
 
-# install dependencies
+# install dependencies (recommended a virtual environment)
 - pip install flask
 - pip install flask-mysqldb
 
