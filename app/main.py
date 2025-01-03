@@ -1,7 +1,7 @@
 from app import app
-from contacts import contacts
+from products import products
 
-app.register_blueprint(contacts)
+app.register_blueprint(products)
 
 # starting the app
 if __name__ == "__main__":
