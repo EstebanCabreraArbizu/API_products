@@ -1,6 +1,9 @@
-CREATE TABLE contacts(
-  id INTEGER PRIMARY KEY AUTO_INCREMENT,
-  fullname VARCHAR(255),
-  phone VARCHAR(255),
-  email VARCHAR(255) NOT NULL UNIQUE
+create table products(
+	id_products INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description VARCHAR(100) NOT NULL,
+    category VARCHAR(50) NOT NULL UNIQUE,
+    unit_price FLOAT4 NOT NULL,
+    stock INT2 NOT NULL,
+    PRIMARY KEY(id_products)
 );
